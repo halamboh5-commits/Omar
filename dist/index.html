@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="مدار — مساحة هادئة لتنظيم مهام يومك ومتابعة إنجازك.">
+  <meta name="theme-color" content="#0f766e">
+  <title>مدار — مساحتك لليوم</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#main" aria-label="مدار، الصفحة الرئيسية">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" role="img" aria-hidden="true">
+          <circle cx="20" cy="20" r="15" fill="none" stroke="currentColor" stroke-width="2.5" opacity=".35"/>
+          <circle cx="20" cy="20" r="6" fill="currentColor"/>
+          <circle cx="31.5" cy="20" r="2.6" fill="currentColor"/>
+        </svg>
+      </span>
+      <span class="brand-text">
+        <strong>مدار</strong>
+        <small>دفتر يومك الهادئ</small>
+      </span>
+    </a>
+
+    <button class="icon-button" id="themeToggle" type="button" aria-label="تبديل الوضع الليلي" aria-pressed="false">
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M12 2.5v2.2M12 19.3v2.2M4.2 4.2l1.6 1.6M18.2 18.2l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.2 19.8l1.6-1.6M18.2 5.8l1.6-1.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 14.4A8.2 8.2 0 0 1 9.6 4a8.4 8.4 0 1 0 10.4 10.4Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </header>
+
+  <main class="layout" id="main">
+    <section class="hero" aria-labelledby="greeting">
+      <p class="eyebrow" id="todayLabel">اليوم</p>
+      <h1 id="greeting">أهلاً بك</h1>
+      <p class="lede">رتّب ما يهمّك، وامنح يومك مساحة ليتنفّس. كل خطوة صغيرة تُحدث فرقاً.</p>
+
+      <div class="progress-card">
+        <div class="ring" role="img" aria-labelledby="progressLabel">
+          <svg viewBox="0 0 130 130" aria-hidden="true">
+            <circle class="ring-track" cx="65" cy="65" r="55" fill="none" stroke-width="11"/>
+            <circle class="ring-value" id="ringValue" cx="65" cy="65" r="55" fill="none" stroke-width="11"
+              stroke-linecap="round" transform="rotate(-90 65 65)"/>
+          </svg>
+          <div class="ring-center">
+            <strong id="progressPercent">0%</strong>
+            <span>منجز</span>
+          </div>
+        </div>
+
+        <dl class="stats" aria-labelledby="progressLabel">
+          <div>
+            <dt id="progressLabel">المهام</dt>
+            <dd id="statTotal">0</dd>
+          </div>
+          <div>
+            <dt>مكتملة</dt>
+            <dd id="statDone">0</dd>
+          </div>
+          <div>
+            <dt>متبقية</dt>
+            <dd id="statLeft">0</dd>
+          </div>
+        </dl>
+      </div>
+
+      <figure class="quote">
+        <blockquote>«الهدوء ليس غياب الضجيج، بل ترتيب ما بداخلك.»</blockquote>
+        <figcaption>مدار</figcaption>
+      </figure>
+    </section>
+
+    <section class="panel" aria-labelledby="panelTitle">
+      <div class="panel-head">
+        <h2 id="panelTitle">مهام اليوم</h2>
+        <span class="hint" id="panelHint">لا شيء بعد</span>
+      </div>
+
+      <form class="add-form" id="addForm" autocomplete="off">
+        <label class="visually-hidden" for="taskInput">عنوان المهمة</label>
+        <input id="taskInput" name="title" type="text" maxlength="90" placeholder="ما الذي يهمّك اليوم؟" required>
+        <label class="visually-hidden" for="prioritySelect">الأولوية</label>
+        <select id="prioritySelect" name="priority">
+          <option value="normal">عادية</option>
+          <option value="important">مهمة</option>
+          <option value="urgent">عاجلة</option>
+        </select>
+        <button class="add-button" type="submit">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          إضافة
+        </button>
+      </form>
+
+      <div class="filters" role="group" aria-label="تصفية المهام">
+        <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">الكل</button>
+        <button class="filter" type="button" data-filter="active" aria-pressed="false">غير منجزة</button>
+        <button class="filter" type="button" data-filter="done" aria-pressed="false">منجزة</button>
+        <button class="clear-button" id="clearDone" type="button">مسح المنجزة</button>
+      </div>
+
+      <ul class="task-list" id="taskList" aria-live="polite"></ul>
+
+      <div class="empty" id="emptyState" hidden>
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <circle cx="32" cy="32" r="22" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 7" opacity=".5"/>
+          <path d="M23 34.5 29 40l13-15" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p>المساحة فارغة الآن — أضف أول مهمة لتبدأ.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>صُنع بهدوء لعمر</span>
+    <span aria-hidden="true">·</span>
+    <span>بياناتك تبقى على جهازك</span>
+  </footer>
+</body>
+</html>
